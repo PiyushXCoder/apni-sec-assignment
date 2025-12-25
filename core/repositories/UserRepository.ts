@@ -4,10 +4,25 @@ import { User, UserWithPassword } from "../types/entities";
 export class UserRepository {
   constructor(private prisma: PrismaClient) { }
 
+  private validateEmail(email: string): void {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      throw new Error("Invalid email format");
+    }
+  }
+
+  private validatePassword(password: string): void {
+    if (!password || password.length < 6) {
+      throw new Error("Password must be at least 6 characters long");
+    }
+  }
+
   async createUser(data: {
     email: string;
     passwordHash: string;
   }): Promise<User> {
+    this.validateEmail(data.email);
+    
     return await this.prisma.user.create({ data }).then((userPrisma) => {
       const user: User = {
         id: userPrisma.id,

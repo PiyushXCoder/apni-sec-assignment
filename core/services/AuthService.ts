@@ -17,6 +17,14 @@ export class AuthService {
   ) { }
 
   async register(email: string, password: string) {
+    if (!email || !password) {
+      throw new Error("Email and password are required");
+    }
+    
+    if (password.length < 6) {
+      throw new Error("Password must be at least 6 characters long");
+    }
+    
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) throw new Error("User already exists");
     const passwordHash = await hashPassword(password);
@@ -24,6 +32,10 @@ export class AuthService {
   }
 
   async login(email: string, password: string, userAgent: string, ip: string) {
+    if (!email || !password) {
+      throw new Error("Email and password are required");
+    }
+    
     const user = await this.userRepository.findByEmail(email);
     if (!user || (await verifyPassword(password, user.passwordHash)) === false)
       throw new Error("Invalid credentials");
