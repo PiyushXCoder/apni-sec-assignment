@@ -4,8 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { AuthService } from "@/core/services/AuthService";
 import { AuthController } from "@/core/controllers/AuthController";
+import { applyRateLimit, addRateLimitHeaders } from "@/core/utils/RateLimitMiddleware";
 
 export async function POST(req: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = applyRateLimit(req, "/api/auth/login");
+  if (!rateLimitResult.success) {
+    return rateLimitResult.response!;
+  }
+
   try {
     const body = await req.json();
     const { email, password } = body;
@@ -31,6 +38,10 @@ export async function POST(req: NextRequest) {
     const tokens = await controller.login(email, password, userAgent, ip);
 
     const response = NextResponse.json(tokens, { status: 200 });
+    
+    // Add rate limit headers
+    addRateLimitHeaders(response, rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
+    
     response.cookies.set("accessToken", tokens.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

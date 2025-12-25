@@ -4,8 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { AuthService } from "@/core/services/AuthService";
 import { AuthController } from "@/core/controllers/AuthController";
 import { RefreshTokenRepository } from "@/core/repositories/RefreshTokenRepository";
+import { applyRateLimit, addRateLimitHeaders } from "@/core/utils/RateLimitMiddleware";
 
 export async function POST(req: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = applyRateLimit(req, "/api/auth/register");
+  if (!rateLimitResult.success) {
+    return rateLimitResult.response!;
+  }
+
   const { email, password } = await req.json();
 
   try {
@@ -15,7 +22,12 @@ export async function POST(req: NextRequest) {
     const controller = new AuthController(service);
     const user = await controller.register(email, password);
 
-    return NextResponse.json(user, { status: 201 });
+    const response = NextResponse.json(user, { status: 201 });
+    
+    // Add rate limit headers
+    addRateLimitHeaders(response, rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
+    
+    return response;
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },

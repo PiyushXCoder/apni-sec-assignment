@@ -5,8 +5,15 @@ import { UserRepository } from "@/core/repositories/UserRepository";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { decodeJWT } from "@/core/utils/jwtUtils";
+import { applyRateLimit, addRateLimitHeaders } from "@/core/utils/RateLimitMiddleware";
 
 export async function GET(req: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = applyRateLimit(req, "/api/issues");
+  if (!rateLimitResult.success) {
+    return rateLimitResult.response!;
+  }
+
   try {
     const accessToken = req.cookies.get("accessToken")?.value;
 
@@ -47,7 +54,12 @@ export async function GET(req: NextRequest) {
       type || undefined
     );
 
-    return NextResponse.json(issues, { status: 200 });
+    const response = NextResponse.json(issues, { status: 200 });
+    
+    // Add rate limit headers
+    addRateLimitHeaders(response, rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
+    
+    return response;
   } catch (error) {
     const errorMessage = (error as Error).message;
     const status = errorMessage.includes("Invalid") ? 400 : 500;
@@ -56,6 +68,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = applyRateLimit(req, "/api/issues");
+  if (!rateLimitResult.success) {
+    return rateLimitResult.response!;
+  }
+
   try {
     const accessToken = req.cookies.get("accessToken")?.value;
 
@@ -99,7 +117,12 @@ export async function POST(req: NextRequest) {
       status,
     });
 
-    return NextResponse.json(issue, { status: 201 });
+    const response = NextResponse.json(issue, { status: 201 });
+    
+    // Add rate limit headers
+    addRateLimitHeaders(response, rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
+    
+    return response;
   } catch (error) {
     const errorMessage = (error as Error).message;
     const status = errorMessage.includes("required") || errorMessage.includes("Invalid") || errorMessage.includes("empty") ? 400 : 500;
