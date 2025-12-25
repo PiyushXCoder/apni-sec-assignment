@@ -1,8 +1,9 @@
 import { UserRepository } from "@/core/repositories/UserRepository";
+import { UserService } from "@/core/services/UserService";
+import { UserController } from "@/core/controllers/UserController";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { decodeJWT } from "@/core/utils/jwtUtils";
-import { hashPassword } from "@/core/utils/PasswordUtils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -27,22 +28,12 @@ export async function GET(req: NextRequest) {
     }
 
     const userRepository = new UserRepository(prisma);
-    const user = await userRepository.findByEmail(email);
+    const userService = new UserService(userRepository);
+    const userController = new UserController(userService);
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+    const profile = await userController.getProfile(email);
 
-    return NextResponse.json(
-      {
-        id: user.id,
-        email: user.email,
-        emailVerifiedAt: user.emailVerifiedAt,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      },
-      { status: 200 },
-    );
+    return NextResponse.json(profile, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
@@ -73,64 +64,23 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const userRepository = new UserRepository(prisma);
-    const user = await userRepository.findByEmail(email);
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     const body = await req.json();
     const { email: newEmail, password } = body;
 
-    if (!newEmail && !password) {
-      return NextResponse.json(
-        { error: "At least one field (email or password) is required" },
-        { status: 400 },
-      );
-    }
+    const userRepository = new UserRepository(prisma);
+    const userService = new UserService(userRepository);
+    const userController = new UserController(userService);
 
-    const updateData: { email?: string; passwordHash?: string } = {};
+    const updatedProfile = await userController.updateProfile(email, {
+      email: newEmail,
+      password,
+    });
 
-    if (newEmail) {
-      if (newEmail !== user.email) {
-        const existingUser = await userRepository.findByEmail(newEmail);
-        if (existingUser) {
-          return NextResponse.json(
-            { error: "Email already in use" },
-            { status: 400 },
-          );
-        }
-      }
-      updateData.email = newEmail;
-    }
-
-    if (password) {
-      if (password.length < 6) {
-        return NextResponse.json(
-          { error: "Password must be at least 6 characters long" },
-          { status: 400 },
-        );
-      }
-      updateData.passwordHash = await hashPassword(password);
-    }
-
-    const updatedUser = await userRepository.updateUser(user.id, updateData);
-
-    return NextResponse.json(
-      {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        emailVerifiedAt: updatedUser.emailVerifiedAt,
-        createdAt: updatedUser.createdAt,
-        updatedAt: updatedUser.updatedAt,
-      },
-      { status: 200 },
-    );
+    return NextResponse.json(updatedProfile, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 },
-    );
+    const errorMessage = (error as Error).message;
+    const status = errorMessage.includes("required") || errorMessage.includes("already in use") ? 400 : 500;
+    return NextResponse.json({ error: errorMessage }, { status });
   }
 }
+
