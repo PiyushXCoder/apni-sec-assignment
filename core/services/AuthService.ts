@@ -59,7 +59,19 @@ export class AuthService {
     if (!user) throw new Error("User not found");
 
     const jwtToken = encodeJWT({ email: user.email });
+    const newRefreshToken = generateRefreshToken();
+    const newTokenHash = hashRefreshToken(newRefreshToken);
+    const newExpiresAt = getRefreshTokenExpiration();
 
-    return { token: jwtToken };
+    await this.refreshTokenRespository.revokeToken(storedToken.id);
+    await this.refreshTokenRespository.createRefreshToken({
+      tokenHash: newTokenHash,
+      userId: user.id,
+      userAgent: storedToken.userAgent,
+      ip: storedToken.ip,
+      expiresAt: newExpiresAt,
+    });
+
+    return { token: jwtToken, refreshToken: newRefreshToken };
   }
 }
