@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { decodeJWT } from "@/core/utils/jwtUtils";
 import { applyRateLimit, addRateLimitHeaders } from "@/core/utils/RateLimitMiddleware";
+import { emailService } from "@/core/services/EmailService";
 
 export async function GET(req: NextRequest) {
   // Apply rate limiting
@@ -115,6 +116,17 @@ export async function POST(req: NextRequest) {
       description,
       priority,
       status,
+    });
+
+    // Send issue created email (async, don't wait)
+    emailService.sendIssueCreatedEmail(user.email, {
+      type: issue.type,
+      title: issue.title,
+      description: issue.description,
+      priority: issue.priority,
+      status: issue.status,
+    }).catch(err => {
+      console.error("Failed to send issue created email:", err);
     });
 
     const response = NextResponse.json(issue, { status: 201 });

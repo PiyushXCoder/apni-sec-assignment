@@ -4,6 +4,7 @@ import { UserController } from "@/core/controllers/UserController";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { decodeJWT } from "@/core/utils/jwtUtils";
+import { emailService } from "@/core/services/EmailService";
 
 export async function GET(req: NextRequest) {
   try {
@@ -74,6 +75,12 @@ export async function PUT(req: NextRequest) {
     const updatedProfile = await userController.updateProfile(email, {
       email: newEmail,
       password,
+    });
+
+    // Send profile updated email (async, don't wait)
+    const emailToNotify = newEmail || email;
+    emailService.sendProfileUpdatedEmail(emailToNotify).catch(err => {
+      console.error("Failed to send profile updated email:", err);
     });
 
     return NextResponse.json(updatedProfile, { status: 200 });

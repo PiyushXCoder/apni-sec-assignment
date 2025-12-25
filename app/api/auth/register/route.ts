@@ -5,6 +5,7 @@ import { AuthService } from "@/core/services/AuthService";
 import { AuthController } from "@/core/controllers/AuthController";
 import { RefreshTokenRepository } from "@/core/repositories/RefreshTokenRepository";
 import { applyRateLimit, addRateLimitHeaders } from "@/core/utils/RateLimitMiddleware";
+import { emailService } from "@/core/services/EmailService";
 
 export async function POST(req: NextRequest) {
   // Apply rate limiting
@@ -21,6 +22,11 @@ export async function POST(req: NextRequest) {
     const service = new AuthService(userRepository, refreshTokenRepository);
     const controller = new AuthController(service);
     const user = await controller.register(email, password);
+
+    // Send welcome email (async, don't wait)
+    emailService.sendWelcomeEmail(email).catch(err => {
+      console.error("Failed to send welcome email:", err);
+    });
 
     const response = NextResponse.json(user, { status: 201 });
     
