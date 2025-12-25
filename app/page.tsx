@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -34,9 +35,14 @@ export default function Home() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <div className="space-y-4 text-center">
         <h1 className="text-4xl font-bold">Hello World</h1>
-        <Button onClick={handleLogout} disabled={isLoading} variant="outline">
-          {isLoading ? "Logging out..." : "Logout"}
-        </Button>
+        <div className="flex gap-3 justify-center">
+          <Link href="/profile">
+            <Button variant="default">Profile</Button>
+          </Link>
+          <Button onClick={handleLogout} disabled={isLoading} variant="outline">
+            {isLoading ? "Logging out..." : "Logout"}
+          </Button>
+        </div>
       </div>
     </div>
   );
