@@ -18,17 +18,18 @@ export default function Home() {
 
         <div className="space-y-4">
           <p className="text-lg">
-            Track Cloud Security, Reteam Assessment, and VAPT issues in one place.
+            Track Cloud Security, Reteam Assessment, and VAPT issues in one
+            place.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/login">
+            <Link href="/register">
               <Button size="lg" variant="default">
                 Get Started
               </Button>
             </Link>
-            <Link href="/register">
+            <Link href="/login">
               <Button size="lg" variant="outline">
-                Sign Up
+                Sign In
               </Button>
             </Link>
           </div>
@@ -61,4 +62,3 @@ export default function Home() {
     </div>
   );
 }
-
