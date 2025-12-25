@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { MiddlewareAuthService } from "@/core/services/MiddlewareAuthService";
 
 const PUBLIC_PATHS = [
+  "/",
   "/login",
   "/register",
   "/api/auth/login",
@@ -36,7 +37,10 @@ export async function proxy(request: NextRequest) {
 
   if (validation.requiresRefresh && refreshToken) {
     const refreshUrl = new URL("/api/auth/refresh", request.url).toString();
-    const tokens = await authService.refreshAccessToken(refreshToken, refreshUrl);
+    const tokens = await authService.refreshAccessToken(
+      refreshToken,
+      refreshUrl,
+    );
 
     if (tokens) {
       const response = NextResponse.next();
