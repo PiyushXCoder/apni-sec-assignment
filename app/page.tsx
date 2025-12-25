@@ -36,6 +36,9 @@ export default function Home() {
       <div className="space-y-4 text-center">
         <h1 className="text-4xl font-bold">Apni Sec Assignment</h1>
         <div className="flex gap-3 justify-center">
+          <Link href="/issues">
+            <Button variant="default">Issues</Button>
+          </Link>
           <Link href="/profile">
             <Button variant="default">Profile</Button>
           </Link>
