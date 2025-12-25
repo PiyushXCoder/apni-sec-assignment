@@ -33,7 +33,7 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/register">
-              <Button size="lg" variant="default">
+              <Button size="lg" variant="default" className="bg-green-600 hover:bg-green-700">
                 Get Started
               </Button>
             </Link>
