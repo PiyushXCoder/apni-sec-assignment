@@ -35,7 +35,7 @@ export default function DashboardPage() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <div className="space-y-4 text-center">
         <h1 className="text-4xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome to Apni Security</p>
+        <p className="text-muted-foreground">Welcome to Apni Sec</p>
         <div className="flex gap-3 justify-center">
           <Link href="/issues">
             <Button variant="default">Issues</Button>
