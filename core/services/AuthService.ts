@@ -23,12 +23,7 @@ export class AuthService {
     return this.userRepository.createUser({ email, passwordHash });
   }
 
-  async login(
-    email: string,
-    password: string,
-    userAgent?: string,
-    ip?: string,
-  ) {
+  async login(email: string, password: string, userAgent: string, ip: string) {
     const user = await this.userRepository.findByEmail(email);
     if (!user || (await verifyPassword(password, user.passwordHash)) === false)
       throw new Error("Invalid credentials");

@@ -28,22 +28,9 @@ export async function POST(req: NextRequest) {
     const service = new AuthService(userRepository, refreshTokenRepository);
     const controller = new AuthController(service);
 
-    const tokens = await controller.login(email, password, userAgent, ip);
+    const result = await controller.login(email, password, userAgent, ip);
 
-    const response = NextResponse.json(tokens, { status: 200 });
-    response.cookies.set("accessToken", tokens.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60,
-    });
-    response.cookies.set("refreshToken", tokens.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30,
-    });
-    return response;
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
