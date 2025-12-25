@@ -8,8 +8,8 @@ export default function Home() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <div className="max-w-4xl mx-auto space-y-8 text-center p-8">
         <div className="space-y-4">
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Apni Security
+          <h1 className="text-6xl font-bold bg-linear-to-r from-black to-black-600 bg-clip-text text-transparent">
+            Apni Sec
           </h1>
           <p className="text-xl text-muted-foreground">
             Manage your security issues with ease
