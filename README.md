@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Apni Sec Assignment
 
-## Getting Started
+A simple security issue management system built with Next.js. Track your Cloud Security, Redteam Assessment, and VAPT issues all in one place.
 
-First, run the development server:
+## What it does
+
+This is a web application where you can create an account, log in, and manage security issues. Each issue has a title, description, type, priority, and status. You'll get email notifications when important things happen.
+
+## Getting started
+
+First, you need to set up your environment variables. Copy the example file and fill in your details:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then edit the .env file with your database connection and email settings.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Install the dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+bun install
+```
 
-## Learn More
+Set up the database:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+bun run prisma migrate dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Start the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+bun run dev
+```
 
-## Deploy on Vercel
+Open http://localhost:3000 in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Running with Docker
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you prefer Docker, you can build and run the application in a container:
+
+```bash
+docker build -t apni-sec .
+docker run -p 3000:3000 apni-sec
+```
+
+Make sure to pass your environment variables when running the container.
+
+## Project structure
+
+The code is organized like this:
+
+- app - all the pages and API routes
+- components - reusable UI components
+- core - business logic and utilities
+- prisma - database schema and migrations
+- public - static files like images and videos
+
+## Tech stack
+
+Built with Next.js 16, React 19, Prisma, PostgreSQL, and Tailwind CSS. Uses JWT for authentication and Resend for emails.
+
+## Notes
+
+This is a hiring assignment for Apni Sec. The authentication is basic but functional. Rate limiting is implemented to prevent abuse. All passwords are hashed with bcrypt.
+
+## License
+
+This project is for educational purposes.
