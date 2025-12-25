@@ -59,7 +59,7 @@ export default function LoginPage() {
         throw new Error(result.error || "Login failed");
       }
 
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");

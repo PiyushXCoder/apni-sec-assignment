@@ -1,52 +1,64 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Link from "next/link";
 
 export default function Home() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      setIsLoading(true);
-
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        router.push("/login");
-        router.refresh();
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <div className="space-y-4 text-center">
-        <h1 className="text-4xl font-bold">Apni Sec Assignment</h1>
-        <div className="flex gap-3 justify-center">
-          <Link href="/issues">
-            <Button variant="default">Issues</Button>
-          </Link>
-          <Link href="/profile">
-            <Button variant="default">Profile</Button>
-          </Link>
-          <Button onClick={handleLogout} disabled={isLoading} variant="outline">
-            {isLoading ? "Logging out..." : "Logout"}
-          </Button>
+      <div className="max-w-4xl mx-auto space-y-8 text-center p-8">
+        <div className="space-y-4">
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            Apni Security
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Manage your security issues with ease
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <p className="text-lg">
+            Track Cloud Security, Reteam Assessment, and VAPT issues in one place.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link href="/login">
+              <Button size="lg" variant="default">
+                Get Started
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button size="lg" variant="outline">
+                Sign Up
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 mt-12">
+          <div className="p-6 rounded-lg border bg-white dark:bg-zinc-900 dark:border-zinc-800">
+            <div className="text-4xl mb-4">🔒</div>
+            <h3 className="text-lg font-semibold mb-2">Secure</h3>
+            <p className="text-sm text-muted-foreground">
+              JWT-based authentication with rate limiting
+            </p>
+          </div>
+          <div className="p-6 rounded-lg border bg-white dark:bg-zinc-900 dark:border-zinc-800">
+            <div className="text-4xl mb-4">📊</div>
+            <h3 className="text-lg font-semibold mb-2">Organized</h3>
+            <p className="text-sm text-muted-foreground">
+              Track issues by type, priority, and status
+            </p>
+          </div>
+          <div className="p-6 rounded-lg border bg-white dark:bg-zinc-900 dark:border-zinc-800">
+            <div className="text-4xl mb-4">📧</div>
+            <h3 className="text-lg font-semibold mb-2">Notified</h3>
+            <p className="text-sm text-muted-foreground">
+              Email notifications for all important events
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

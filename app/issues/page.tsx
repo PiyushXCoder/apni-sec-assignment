@@ -134,8 +134,8 @@ export default function IssuesPage() {
         <div className="flex justify-between items-center">
           <h1 className="text-4xl font-bold">Issues</h1>
           <div className="flex gap-3">
-            <Link href="/">
-              <Button variant="outline">Home</Button>
+            <Link href="/dashboard">
+              <Button variant="outline">Dashboard</Button>
             </Link>
             <Link href="/issues/new">
               <Button>Create Issue</Button>

@@ -217,10 +217,10 @@ export default function ProfilePage() {
 
         <div className="text-center text-sm">
           <Link
-            href="/"
+            href="/dashboard"
             className="font-medium text-primary hover:underline"
           >
-            Back to Home
+            Back to Dashboard
           </Link>
         </div>
       </div>
