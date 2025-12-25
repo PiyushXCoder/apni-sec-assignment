@@ -65,4 +65,29 @@ export class UserRepository {
       return user;
     });
   }
+
+  async updateUser(
+    id: string,
+    data: { email?: string; passwordHash?: string }
+  ): Promise<User> {
+    if (data.email) {
+      this.validateEmail(data.email);
+    }
+
+    return await this.prisma.user
+      .update({
+        where: { id },
+        data,
+      })
+      .then((userPrisma) => {
+        const user: User = {
+          id: userPrisma.id,
+          email: userPrisma.email,
+          emailVerifiedAt: userPrisma.emailVerifiedAt,
+          createdAt: userPrisma.createdAt,
+          updatedAt: userPrisma.updatedAt,
+        };
+        return user;
+      });
+  }
 }
