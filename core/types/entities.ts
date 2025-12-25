@@ -19,3 +19,14 @@ export interface UserAuthData {
 export interface UserProfile {
   email: string;
 }
+
+export interface RefreshToken {
+  id: string;
+  tokenHash: string;
+  userAgent: string | null;
+  ip: string | null;
+  createdAt: Date;
+  expiresAt: Date;
+  revokedAt: Date | null;
+  userId: string;
+}
