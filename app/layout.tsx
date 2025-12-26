@@ -35,7 +35,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Apni Sec" }],
   creator: "Apni Sec",
   publisher: "Apni Sec",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
+  ),
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -86,8 +88,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"} />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <link
+          rel="canonical"
+          href={process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}
+        />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=5"
+        />
         <meta name="theme-color" content="#000000" />
       </head>
       <body

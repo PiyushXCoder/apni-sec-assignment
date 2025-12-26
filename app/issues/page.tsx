@@ -130,7 +130,7 @@ export default function IssuesPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-6 pt-10">
         <div className="flex justify-between items-center">
           <h1 className="text-4xl font-bold">Issues</h1>
           <div className="flex gap-3">
@@ -196,14 +196,14 @@ export default function IssuesPage() {
                     <div className="flex items-center gap-2 mb-2">
                       <span
                         className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
-                          issue.status
+                          issue.status,
                         )}`}
                       >
                         {issue.status.replace(/_/g, " ")}
                       </span>
                       <span
                         className={`px-2 py-1 rounded text-xs font-medium ${getPriorityColor(
-                          issue.priority
+                          issue.priority,
                         )}`}
                       >
                         {issue.priority}
